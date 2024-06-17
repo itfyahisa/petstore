@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petstore.app.mapper.PetMapper">
+
+	<select id = "findAll" resultType="com.petstore.app.entity.Pet">
+		SELECT * FROM pet;	
+	</select>
+	
+	<select id = "findById" resultType="com.petstore.app.entity.Pet">
+		SELECT * FROM pet WHERE id = #{id};
+	</select>
+
+	<insert id = "insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO pet(name, status) VALUES(#{name}, #{status});
+	</insert>
+	
+	<update id = "update">
+		UPDATE pet SET
+			name = #{name},
+			status = #{status}
+		WHERE id = #{id};
+	</update>
+	
+	<delete id = "delete">
+		DELETE FROM pet WHERE id = #{id};
+	</delete>
+
+</mapper>
