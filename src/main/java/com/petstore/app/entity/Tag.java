@@ -7,17 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pet {
-
-	private Long id;
-	private Long categoryId;
-	private String name;
-	private Status status;
+public class Tag {
 	
-	public enum Status{
-		available,
-		pending,
-		sold
-	}
+	private Long id;
+	private String name;
 	
 }

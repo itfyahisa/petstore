@@ -3,15 +3,30 @@
 <mapper namespace="com.petstore.app.mapper.PetMapper">
 
 	<select id = "findAll" resultType="com.petstore.app.entity.Pet">
-		SELECT * FROM pet;	
+		SELECT * FROM pet;
 	</select>
 	
 	<select id = "findById" resultType="com.petstore.app.entity.Pet">
 		SELECT * FROM pet WHERE id = #{id};
 	</select>
+	
+	<select id = "findByName" resultType = "com.petstore.app.entity.Pet">
+		SELECT * FROM pet WHERE name = #{name};
+	</select>
+	
+	<select id = "findByStatus" resultType = "com.petstore.app.entity.Pet">
+		SELECT * FROM pet WHERE status = #{status};
+	</select>
+	
+	<select id = "findByTag" resultType = "com.petstore.app.entity.Pet">
+		SELECT * FROM pet
+			JOIN pet_tag ON pet.id = pet_tag.pet_id
+			JOIN tag ON pet_tag.tag_id = tag.id
+		 WHERE tag.name = #{name};
+	</select>
 
 	<insert id = "insert" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO pet(name, status) VALUES(#{name}, #{status});
+		INSERT INTO pet(category_id, name, status) VALUES(#{categoryId}, #{name}, 'available');
 	</insert>
 	
 	<update id = "update">

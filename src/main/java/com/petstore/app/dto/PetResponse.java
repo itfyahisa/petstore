@@ -1,6 +1,11 @@
 package com.petstore.app.dto;
 
+import java.util.List;
+import java.util.Optional;
+
+import com.petstore.app.entity.Category;
 import com.petstore.app.entity.Pet;
+import com.petstore.app.entity.Tag;
 
 import lombok.Data;
 
@@ -8,15 +13,25 @@ import lombok.Data;
 public class PetResponse {
 	
 	private Long id;
-//	private Category category;
+	private Category category;
 	private String name;
-//	private Tag tags;
-	private String Status;
+	private List<String> photoUrls;
+	private List<Tag> tags;
+	private Pet.Status Status;
 	
-	public PetResponse(Pet pet) {
+	public PetResponse(Pet pet, Category category, List<String> photoUrls, List<Tag> tags) {
 		this.id = pet.getId();
+		this.category = category;
 		this.name = pet.getName();
-		Status = pet.getStatus();
+		this.photoUrls = photoUrls;
+		this.Status = pet.getStatus();
+		this.tags = tags;
+	}
+	
+	public enum Status{
+		available,
+		pending,
+		sold
 	}
 	
 }

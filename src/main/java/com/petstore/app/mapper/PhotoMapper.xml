@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.petstore.app.mapper.PhotoMapper">
+
+	<select id = "findAll" resultType = "com.petstore.app.entity.Photo">
+		SELECT * FROM photo;
+	</select>
+
+	<select id = "findByPetId" resultType = "com.petstore.app.entity.Photo">
+		SELECT url from photo WHERE pet_id = #{petId};
+	</select>
+	
+	<select id = "findByUrl" resultType = "com.petstore.app.entity.Photo">
+		SELECT * FROM photo WHERE url = #{url};
+	</select>
+	
+	<insert id = "insert">
+		INSERT INTO photo(pet_id, url) VALUES(#{petId}, #{url});
+	</insert>
+	
+	<delete id = "deleteByPetId">
+		DELETE FROM photo WHERE pet_id = #{petId};
+	</delete>
+
+</mapper>
