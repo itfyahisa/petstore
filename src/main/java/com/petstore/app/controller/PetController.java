@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/pets")
+@RequestMapping("/pet")
 public class PetController {
 
 	private final PetService petService;
