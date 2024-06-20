@@ -68,8 +68,7 @@ public class PetController {
 	
 	public void validatePetRequest(BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
-			String errorMessage = bindingResult.getFieldError().getDefaultMessage();
-			throw new BadRequestException(errorMessage);
+			throw new BadRequestException();
 		}
 	}
 	

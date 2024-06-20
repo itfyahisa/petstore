@@ -31,6 +31,7 @@
 	
 	<update id = "update">
 		UPDATE pet SET
+			category_id = #{categoryId},
 			name = #{name},
 			status = #{status}
 		WHERE id = #{id};
