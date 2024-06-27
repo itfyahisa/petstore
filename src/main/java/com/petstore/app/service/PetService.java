@@ -36,9 +36,18 @@ public class PetService {
 		pets.forEach(pet -> {
 			PetResponse petResponse = createResponse(pet); //取得したpetListでレスポンスを作成
 			petResponses.add(petResponse); //ResponseList に追加
-		});
+		});	
 		return petResponses;
 	}
+	
+//	public List<PetResponse> findAll() {
+//	    List<Pet> pets = petMapper.findAll(); // id, category_id, name, status
+//
+//	    // Streamを使用して、PetのリストをPetResponseのリストに変換
+//	    return pets.stream()
+//	               .map(this::createResponse) // petをpetResponseに変換
+//	               .collect(Collectors.toList()); // 結果をリストに収集
+//	}
 	
 	//id検索
 	public PetResponse findById(Long id) {
@@ -80,17 +89,21 @@ public class PetService {
 		//petのcategoryIdが0の時、categoryは空配列で表示する(category設定なし)
 		//petのcategoryIdが0以外の時、categoryIdを使用してCategoryを検索する
 		Category category = new Category();
-		if(pet.getCategoryId() != 0L) {
-			category = categoryMapper.findById(pet.getCategoryId());
+		
+		Long CategoryId = pet.getCategoryId();
+		Long petId = pet.getId();
+		
+		if(CategoryId != 0L) {
+			category = categoryMapper.findById(CategoryId);
 		}
 		
 		//petIdを使用して写真を検索、リスト化
-		List<Photo> photos = photoMapper.findByPetId(pet.getId()); 
+		List<Photo> photos = photoMapper.findByPetId(petId); 
 		List<String> photoUrls = new ArrayList<>();
 		photos.forEach(photo -> photoUrls.add(photo.getUrl())); //photoUrlsSet
 		
 		//petIdを使用してtagを検索、リスト化
-		List<Tag> tags = tagMapper.findByPetId(pet.getId());  // tagSet
+		List<Tag> tags = tagMapper.findByPetId(petId);  // tagSet
 		
 		PetResponse petResponse = new PetResponse(pet, category, photoUrls, tags);
 		return petResponse;
@@ -122,7 +135,7 @@ public class PetService {
 		pet.setStatus(petRequest.getStatus());
 		petMapper.insert(pet); 
 		
-//		//insert photoUrls
+//		//insert photoUrls メソッドにしてもよい。
 		List<String> photoUrls = petRequest.getPhotoUrls();
 		String newPetName = pet.getName();
 		Pet newPet = petMapper.findByName(newPetName);
@@ -131,7 +144,7 @@ public class PetService {
 			photoMapper.insert(petId, url);
 		});
 		
-		//insert Tags
+		//insert Tags メソッドにしてもよい
 		List<Tag> requestTags = petRequest.getTags(); //id,name
 		List<Tag> tags = new ArrayList<>();
 		
@@ -191,29 +204,31 @@ public class PetService {
 		petMapper.update(pet); 
 		
 		//UpdatePhotoUrls
+		Long petId = pet.getId();
 		List<String> RequestPhotoUrls = petRequest.getPhotoUrls(); //リクエスト
-		List<Photo> oldPhotos = photoMapper.findByPetId(pet.getId()); //DB上データ
+		List<Photo> oldPhotos = photoMapper.findByPetId(petId); //DB上データ
 		List<String> oldPhotoUrls = new ArrayList<>();
 		oldPhotos.forEach(photo -> oldPhotoUrls.add(photo.getUrl()));
 		//DBのデータと比較して一致していなかったらいったん削除して再作成
 		if(!oldPhotoUrls.equals(RequestPhotoUrls)) { 
 			photoMapper.deleteByPetId(pet.getId());
-			RequestPhotoUrls.forEach(url -> photoMapper.insert(pet.getId(), url));
+			RequestPhotoUrls.forEach(url -> photoMapper.insert(petId, url));
 		}
 		
 		//UpdateTags
 		List<Tag> requestTags = petRequest.getTags(); //リクエスト
-		List<Tag> oldTags = tagMapper.findByPetId(pet.getId()); //DB上データ
+		List<Tag> oldTags = tagMapper.findByPetId(petId); //DB上データ
 		//DBのデータと比較して一致していなかったら再作成
 		if (!oldTags.equals(requestTags)) {
-		    tagMapper.deleteByPetId(pet.getId());
+		    tagMapper.deleteByPetId(petId);
 		    requestTags.forEach(tag -> {
-		        Tag existingTag = tagMapper.findByName(tag.getName());
+		    	String tagName = tag.getName();
+		        Tag existingTag = tagMapper.findByName(tagName);
 		        if (existingTag == null) {
 		            // タグが存在しない場合の処理
 		            tagMapper.insertTag(tag.getName());
-		            Long newTagId = tagMapper.findByName(tag.getName()).getId(); // 新しいタグのID取得
-		            tagMapper.insertPetTag(pet.getId(), newTagId);
+		            Long newTagId = tagMapper.findByName(tagName).getId(); // 新しいタグのID取得
+		            tagMapper.insertPetTag(petId, newTagId);
 		        } else {
 		            // タグが既に存在する場合の処理
 		            tagMapper.insertPetTag(pet.getId(), existingTag.getId());

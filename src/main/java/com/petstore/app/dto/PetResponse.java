@@ -1,8 +1,6 @@
 package com.petstore.app.dto;
 
 import java.util.List;
-import java.util.Optional;
-
 import com.petstore.app.entity.Category;
 import com.petstore.app.entity.Pet;
 import com.petstore.app.entity.Tag;

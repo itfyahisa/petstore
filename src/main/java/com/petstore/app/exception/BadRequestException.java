@@ -16,9 +16,4 @@ public class BadRequestException extends RuntimeException {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
-
-	
-
-
-
 }

@@ -41,6 +41,9 @@ public class PetController {
 	@GetMapping("/findByStatus")
 	public List<PetResponse> findByStatuses(@RequestParam List<String> statuses){
 		return petService.findByStatus(statuses);
+//        // 空白をコンマに置き換えてリストに変換
+//        List<String> statusList = Arrays.asList(statuses.split("\\s+"));　s = space が一個以上のところで分割
+//        return petService.findByStatus(statusList);
 	}
 	
 	@GetMapping("/findByTags")
